@@ -20,15 +20,16 @@ namespace CadastraEmpresas.Services
             if (response.IsSuccessStatusCode)
             {
                 var content = await response.Content.ReadAsStringAsync();
-                var EmpresaResponse = JsonSerializer.Deserialize<EmpresaResponse>(content, new JsonSerializerOptions
+                
+                var empresaResponse = JsonSerializer.Deserialize<EmpresaResponse>(content, new JsonSerializerOptions
                 {
                     PropertyNameCaseInsensitive = true
                 });
-                return EmpresaResponse;
+                
+                return empresaResponse;
             }
 
             return null;
-
         }
     }
     
@@ -38,22 +39,29 @@ namespace CadastraEmpresas.Services
         public string? Fantasia { get; set; } 
         public string? Cnpj { get; set; } 
         public string? Situacao { get; set; } 
-        public string? Abertura { get; set; }
-        public string? Tipo { get; set; }
+        public string? Abertura { get; set; } 
+        public string? Tipo { get; set; } 
         public string? Natureza_juridica { get; set; } 
-        public string? Atividade_principal { get; set; } 
+        
+        public List<AtividadeResponse>? Atividade_principal { get; set; }
         
         public EnderecoResponse? Endereco { get; set; }
 
         public class EnderecoResponse
         {
-            public string? Logradouro { get; set; }
-            public string? Numero { get; set; }
-            public string? Complemento { get; set; }
+            public string? Logradouro { get; set; } 
+            public string? Numero { get; set; } 
+            public string? Complemento { get; set; } 
             public string? Bairro { get; set; }
-            public string? Municipio { get; set; }
-            public string? Uf { get; set; }
-            public string? Cep { get; set; }
+            public string? Municipio { get; set; } 
+            public string? Uf { get; set; } 
+            public string? Cep { get; set; } 
         }
+    }
+
+    public class AtividadeResponse
+    {
+        public string? Code { get; set; }
+        public string? Text { get; set; }
     }
 }
