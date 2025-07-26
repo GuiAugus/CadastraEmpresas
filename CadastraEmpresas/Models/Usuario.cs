@@ -7,13 +7,13 @@ namespace CadastraEmpresas.Models
         public int Id { get; set; }
 
         [Required(ErrorMessage = "O Nome e obrigatorio.")]
-        public string Nome { get; set; }
+        public required string Nome { get; set; }
 
         [Required(ErrorMessage = "O e-mail e obrigatorio.")]
         [EmailAddress(ErrorMessage = "Formato de e-mail invalido.")]
-        public string Email { get; set; }
+        public required string Email { get; set; }
 
         [Required(ErrorMessage = "A senha e obrigatoria")]
-        public string SenhaHash { get; set; }
+        public required string SenhaHash { get; set; }
     }
 }
