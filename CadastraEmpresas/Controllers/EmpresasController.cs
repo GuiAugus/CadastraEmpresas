@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
+using System.Text.RegularExpressions;
 
 namespace CadastraEmpresas.Controllers
 {
@@ -25,14 +26,16 @@ namespace CadastraEmpresas.Controllers
         [HttpPost("cadastrar")]
         public async Task<IActionResult> CadastrarEmpresa([FromBody] string cnpj)
         {
-            if (string.IsNullOrWhiteSpace(cnpj) || cnpj.Length != 14)
+            string cnpjLimpo = Regex.Replace(cnpj, @"[^\d]", "");
+
+            if (string.IsNullOrWhiteSpace(cnpjLimpo) || cnpjLimpo.Length != 14)
             {
-                return BadRequest("CNPJ invalido.");
+                return BadRequest("CNPJ invalido. Deve ter 14 digitos.");
             }
 
             var usuarioId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
             var empresaExistente = await _context.Empresas
-                .Where(e => e.Cnpj == cnpj && e.UsuarioId == usuarioId)
+                .Where(e => e.Cnpj == cnpjLimpo && e.UsuarioId == usuarioId)
                 .FirstOrDefaultAsync();
 
             if (empresaExistente != null)
@@ -40,7 +43,7 @@ namespace CadastraEmpresas.Controllers
                 return BadRequest("Esta empresa ja foi cadastrada por voce.");
             }
 
-            var dadosEmpresa = await _receitaWSService.ConsultarCnpj(cnpj);
+            var dadosEmpresa = await _receitaWSService.ConsultarCnpj(cnpjLimpo);
 
             if (dadosEmpresa == null || string.IsNullOrWhiteSpace(dadosEmpresa.Cnpj))
             {
